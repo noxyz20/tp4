@@ -1,10 +1,11 @@
 <?php
 
-class Fournisseur
+
+class Gestion
 {
-    private $name;
-    private $phone;
-    private $address;
+    private $id_article;
+    private $id_service;
+    private $quantity;
 
     public function __construct()
     {
@@ -24,10 +25,10 @@ class Fournisseur
      * get all fournisseur table
      * @return array
      */
-    public function getAllFournisseur() : array {
+    public function getAllGestion() : array {
         $conn = new db();
         $conn = $conn->connexion();
-        $req = $conn->prepare("SELECT * FROM fournisseur");
+        $req = $conn->prepare("SELECT * FROM historique_gestion");
         $req->execute();
         return $req->fetchAll();
     }
@@ -38,10 +39,10 @@ class Fournisseur
     public function save(){
         $conn = new db();
         $conn = $conn->connexion();
-        $req = $conn->prepare("INSERT INTO fournisseur (nom, tel, adresse) VALUES (:nom, :tel, :adresse)");
-        $req->bindParam(':nom', $this->name);
-        $req->bindParam(':tel', $this->phone);
-        $req->bindParam(':adresse', $this->address);
+        $req = $conn->prepare("INSERT INTO historique_gestion (id_article, COD_service, quantite_enleve, date_) VALUES (:id_article, :COD_service, :quantite_enleve, now())");
+        $req->bindParam(':id_article', $this->id_article);
+        $req->bindParam(':COD_service', $this->id_service);
+        $req->bindParam(':quantite_enleve', $this->quantity);
         $req->execute();
     }
 }

@@ -1,10 +1,11 @@
 <?php
 
-class Fournisseur
+
+class Order
 {
-    private $name;
-    private $phone;
-    private $address;
+    private $id_article;
+    private $quantity;
+    private $prix;
 
     public function __construct()
     {
@@ -24,10 +25,10 @@ class Fournisseur
      * get all fournisseur table
      * @return array
      */
-    public function getAllFournisseur() : array {
+    public function getAllOrder() : array {
         $conn = new db();
         $conn = $conn->connexion();
-        $req = $conn->prepare("SELECT * FROM fournisseur");
+        $req = $conn->prepare("SELECT * FROM commande");
         $req->execute();
         return $req->fetchAll();
     }
@@ -38,10 +39,10 @@ class Fournisseur
     public function save(){
         $conn = new db();
         $conn = $conn->connexion();
-        $req = $conn->prepare("INSERT INTO fournisseur (nom, tel, adresse) VALUES (:nom, :tel, :adresse)");
-        $req->bindParam(':nom', $this->name);
-        $req->bindParam(':tel', $this->phone);
-        $req->bindParam(':adresse', $this->address);
+        $req = $conn->prepare("INSERT INTO commande (id_article, quantite, prix, date_commande) VALUES (:id_article, :quantite, :prix, now())");
+        $req->bindParam(':id_article', $this->id_article);
+        $req->bindParam(':quantite', $this->quantity);
+        $req->bindParam(':prix', $this->prix);
         $req->execute();
     }
 }

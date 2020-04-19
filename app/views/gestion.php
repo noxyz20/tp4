@@ -7,6 +7,30 @@ $_SESSION['crsf_token'] = $crsf_token;
 
 
 <div class="container">
+    <?php
+        if (isset($_SESSION['alert']['id']))
+        {
+            if ($_SESSION['alert']['id'] == 1){
+
+                echo '<div class="alert mt-3 alert-success alert-dismissible fade show" role="alert">';
+                    echo '<strong>Success ! </strong>' . $_SESSION['alert']['message'] .'.';
+                    echo '<button type="button" class="close" data-dismiss="alert" aria-label="Close">';
+                        echo '<span aria-hidden="true">&times;</span>';
+                    echo '</button>';
+                echo '</div>';
+            }
+            elseif ($_SESSION['alert']['id'] == 2) {
+                echo '<div class="alert mt-3 alert-danger alert-dismissible fade show" role="alert">';
+                    echo '<strong>Oops ! </strong>' . $_SESSION['alert']['message'] .'.';
+                    echo '<button type="button" class="close" data-dismiss="alert" aria-label="Close">';
+                        echo '<span aria-hidden="true">&times;</span>';
+                    echo '</button>';
+                echo '</div>';
+            }
+        }
+    $_SESSION['alert']['id'] = 0;
+    $_SESSION['alert']['message'] = "";
+    ?>
     <div class="my-3 p-3 bg-white rounded shadow-sm">
         <div class="row">
             <div class="col-4">
@@ -47,8 +71,9 @@ $_SESSION['crsf_token'] = $crsf_token;
                 <h6 class="border-bottom border-gray mt-4 pb-2 mb-0">Attribution d'article</h6>
                 <form class="mt-1" action="/gestion" method="post">
                     <div class="form-group">
-                        <label for="fournisseur">Article</label>
-                        <select class="form-control" name="fournisseurArticle" id="fournisseur">
+                        <input type="hidden" name="crsf_token" value="<?= $crsf_token ?>">
+                        <label for="codeArticle">Article</label>
+                        <select class="form-control" name="codeArticle" id="codeArticle">
                             <?php
                             foreach ($articles as $article)
                             {
@@ -56,8 +81,8 @@ $_SESSION['crsf_token'] = $crsf_token;
                             }
                             ?>
                         </select>
-                        <label for="fournisseur">Service</label>
-                        <select class="form-control" name="fournisseurArticle" id="fournisseur">
+                        <label for="codeService">Service</label>
+                        <select class="form-control" name="codeService" id="codeService">
                             <?php
                             foreach ($services as $service)
                             {
@@ -65,13 +90,42 @@ $_SESSION['crsf_token'] = $crsf_token;
                             }
                             ?>
                         </select>
-                        <label for="idService">Nombre de produit</label>
-                        <input type="text" class="form-control" name="idService" id="idService" placeholder="5" required>
+                        <label for="nbArticle">Nombre de produit</label>
+                        <input type="text" class="form-control" name="nbArticle" id="nbArticle" placeholder="5" required>
                     </div>
                     <div class="form-group">
                         <button type="submit" class="btn btn-primary">Atribuer</button>
                     </div>
                 </form>
+                <h6 class="border-bottom border-gray pb-2 mb-0">Les Atributions</h6>
+                <table class="table table-striped">
+                    <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Article</th>
+                        <th scope="col">Service</th>
+                        <th scope="col">Quantité enlevées</th>
+                        <th scope="col">Date</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <?php
+                    foreach ($gestions as $gestion)
+                    {
+                        echo '<tr>';
+                        echo '<th scope="row">' . $gestion['id'] . '</th>';
+                        echo '<td>';
+                        foreach ($articles as $article)
+                            if($article['id'] == $gestion['id_article'])
+                                echo $article['nom'];
+                        echo '</td>';
+                        echo '<td>' . $gestion['COD_service'] . '</td>';
+                        echo '<td>' . $gestion['quantite_enleve'] . '</td>';
+                        echo '<td>' . $gestion['date_'] . '</td>';
+                    }
+                    ?>
+                    </tbody>
+                </table>
             </div>
             <div class="col-8">
                 <h6 class="border-bottom border-gray pb-2 mb-0">Ajouter un fournisseurs</h6>
@@ -113,7 +167,7 @@ $_SESSION['crsf_token'] = $crsf_token;
                     </tbody>
                 </table>
                 <hr class="my-3">
-                <h6 class="border-bottom border-gray pb-2 mb-0">Ajouter un Article</h6>
+                <h6 class="border-bottom border-gray pb-2 mb-0">Ajouter un article</h6>
                 <form class="mt-1" action="/gestion" method="post">
                     <div class="form-group">
                         <input type="hidden" name="crsf_token" value="<?= $crsf_token ?>">
@@ -137,7 +191,7 @@ $_SESSION['crsf_token'] = $crsf_token;
                         <button type="submit" class="btn btn-primary">Enregister</button>
                     </div>
                 </form>
-                <h6 class="border-bottom border-gray pb-2 mb-0">Les article</h6>
+                <h6 class="border-bottom border-gray pb-2 mb-0">Les articles</h6>
                 <table class="table table-striped">
                     <thead>
                     <tr>

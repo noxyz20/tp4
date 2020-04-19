@@ -1,10 +1,11 @@
 <?php
 
 
+
 class Article
 {
 
-    private $nom;
+    private $name;
     private $price;
     private $fournisseur;
     private $stock;
@@ -29,20 +30,37 @@ class Article
      */
     public function getAllArticle(): array
     {
-        $servname = 'localhost';
-        $dbname = 'tp4';
-        $user = 'root';
-        $pass = '';
-
-        try {
-            $conn = new PDO("mysql:host=$servname;dbname=$dbname", $user, $pass);
-            $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-        } catch (PDOException $e) {
-            echo "Erreur : " . $e->getMessage();
-        }
+        $conn = new db();
+        $conn = $conn->connexion();
         $req = $conn->prepare("SELECT * FROM article");
         $req->execute();
         return $req->fetchAll();
+    }
+
+    /**
+     * gat all service by id
+     * @param $id_article
+     * @return array
+     */
+    public function getArticleById($id_article): array {
+        $conn = new db();
+        $conn = $conn->connexion();
+        $req = $conn->prepare("SELECT * FROM article WHERE id = ".$id_article);
+        $req->execute();
+        return $req->fetchAll();
+    }
+
+    /**
+     * update quantity by a specifique ID
+     * @param $quantity
+     */
+    public function updateQuantityById($quantity, $id){
+        $conn = new db();
+        $conn = $conn->connexion();
+        $actualStock = $this->getArticleById($id);
+        $newStock = $actualStock[0]["stock"] + $quantity;
+        $req = $conn->prepare("UPDATE article SET stock = " . $newStock . " WHERE id = ". $id);
+        $req->execute();
     }
 
     /**
@@ -50,17 +68,8 @@ class Article
      */
     public function save()
     {
-        $servname = 'localhost';
-        $dbname = 'tp4';
-        $user = 'root';
-        $pass = '';
-
-        try {
-            $conn = new PDO("mysql:host=$servname;dbname=$dbname", $user, $pass);
-            $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-        } catch (PDOException $e) {
-            echo "Erreur : " . $e->getMessage();
-        }
+        $conn = new db();
+        $conn = $conn->connexion();
         $req = $conn->prepare("INSERT INTO article (nom, prix_unit, id_fournisseur, stock) VALUES (:nom, :prix_unit, :id_fournisseur, :stock)");
         $req->bindParam(':nom', $this->name);
         $req->bindParam(':prix_unit', $this->price);

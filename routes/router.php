@@ -41,12 +41,28 @@ switch ($request) {
                 require '../app/views/errors/403.html';
                 break;
             }
+        if (isset($_POST['codeArticle']) && isset($_POST['codeService']) && isset($_POST['nbArticle']))
+            if($_POST['crsf_token'] == $_SESSION['crsf_token'])
+                $view->attribution_request($_POST['codeArticle'], $_POST['codeService'], $_POST['nbArticle']);
+            else {
+                http_response_code(403);
+                require '../app/views/errors/403.html';
+                break;
+            }
         $view->index();
         break;
 
     case '/order' :
         require '../app/controllers/orderController.php';
         $view = new orderController();
+        if (isset($_POST['commandeArticle']) && isset($_POST['quantite']))
+            if($_POST['crsf_token'] == $_SESSION['crsf_token'])
+                $view->order_request($_POST['commandeArticle'], $_POST['quantite']);
+            else {
+                http_response_code(403);
+                require '../app/views/errors/403.html';
+                break;
+            }
         $view->index();
         break;
     default:

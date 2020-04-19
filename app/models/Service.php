@@ -26,17 +26,8 @@ class Service
      */
     public function getAllService(): array
     {
-        $servname = 'localhost';
-        $dbname = 'tp4';
-        $user = 'root';
-        $pass = '';
-
-        try {
-            $conn = new PDO("mysql:host=$servname;dbname=$dbname", $user, $pass);
-            $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-        } catch (PDOException $e) {
-            echo "Erreur : " . $e->getMessage();
-        }
+        $conn = new db();
+        $conn = $conn->connexion();
         $req = $conn->prepare("SELECT * FROM service");
         $req->execute();
         return $req->fetchAll();
@@ -47,17 +38,8 @@ class Service
      */
     public function save()
     {
-        $servname = 'localhost';
-        $dbname = 'tp4';
-        $user = 'root';
-        $pass = '';
-
-        try {
-            $conn = new PDO("mysql:host=$servname;dbname=$dbname", $user, $pass);
-            $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-        } catch (PDOException $e) {
-            echo "Erreur : " . $e->getMessage();
-        }
+        $conn = new db();
+        $conn = $conn->connexion();
         $req = $conn->prepare("INSERT INTO service (libelle, COD) VALUES (:libelle, :COD)");
         $req->bindParam(':libelle', $this->name);
         $req->bindParam(':COD', $this->code);
