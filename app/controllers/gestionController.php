@@ -43,7 +43,7 @@ class gestionController
     public function attribution_request($id_article, $id_service, $quantity){
         $gestion = new Gestion();
         $article = new Article();
-        if ($quantity < $article->getArticleById($id_article)[0]["stock"]) {
+        if ($quantity <= $article->getArticleById($id_article)[0]["stock"]) {
             $quantity = $quantity * -1;
             $article->updateQuantityById($quantity, $id_article);
             $gestion->__set('id_article', $id_article);
